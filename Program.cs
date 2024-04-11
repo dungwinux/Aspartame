@@ -145,7 +145,7 @@ while (true) {
           y = newPos[1];
           r = newPos[2];
           v = newPos[3];
-          if(v == 1){
+          if(v != 0){
             continue;
           }
           break;
@@ -156,7 +156,7 @@ while (true) {
           y = nnewPos[1];
           r = nnewPos[2];
           v = nnewPos[3];
-          if(v == 1){
+          if(v != 0){
             continue;
           }
           break;
@@ -167,7 +167,7 @@ while (true) {
           // y = nnnewPos[1];
           // r = nnnewPos[2];
           // v = nnnewPos[3];
-          // if(v == 1){
+          // if(v != 0){
           //   continue;
           // }
           // break;
