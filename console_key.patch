@@ -1,0 +1,55 @@
+diff --git a/src/zerolib/System/Console.Efi.cs b/src/zerolib/System/Console.Efi.cs
+index 4b8a0cd..c2968d0 100644
+--- a/src/zerolib/System/Console.Efi.cs
++++ b/src/zerolib/System/Console.Efi.cs
+@@ -75,6 +75,23 @@ namespace System
+                     2 => ConsoleKey.DownArrow,
+                     3 => ConsoleKey.RightArrow,
+                     4 => ConsoleKey.LeftArrow,
++                    0x05 => ConsoleKey.Home,
++                    0x06 => ConsoleKey.End,
++                    0x07 => ConsoleKey.Insert,
++                    0x08 => ConsoleKey.Delete,
++                    0x09 => ConsoleKey.PageUp,
++                    0x0a => ConsoleKey.PageDown,
++                    0x0b => ConsoleKey.F1,
++                    0x0c => ConsoleKey.F2,
++                    0x0d => ConsoleKey.F3,
++                    0x0e => ConsoleKey.F4,
++                    0x0f => ConsoleKey.F5,
++                    0x10 => ConsoleKey.F6,
++                    0x11 => ConsoleKey.F7,
++                    0x12 => ConsoleKey.F8,
++                    0x13 => ConsoleKey.F9,
++                    0x14 => ConsoleKey.F10,
++                    0x17 => ConsoleKey.Escape,
+                     _ => default(ConsoleKey),
+                 };
+                 s_scanCodeBuffer = 0;
+diff --git a/src/zerolib/System/Console.cs b/src/zerolib/System/Console.cs
+index 36e3ed4..d136197 100644
+--- a/src/zerolib/System/Console.cs
++++ b/src/zerolib/System/Console.cs
+@@ -29,6 +29,22 @@ namespace System
+         UpArrow = 38,
+         RightArrow = 39,
+         DownArrow = 40,
++        PageUp = 33,
++        PageDown = 34,
++        End = 35,
++        Home = 36,
++        Insert = 45,
++        Delete = 46,
++        F1 = 112,
++        F2 = 113,
++        F3 = 114,
++        F4 = 115,
++        F5 = 116,
++        F6 = 117,
++        F7 = 118,
++        F8 = 119,
++        F9 = 120,
++        F10 = 121,
+     }
+ 
+     public readonly struct ConsoleKeyInfo

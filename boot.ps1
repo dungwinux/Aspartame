@@ -1,8 +1,14 @@
 # https://github.com/bflattened/bflat
 $BFLAT = 'D:\tools\bflat-8.0.2-windows-x64\'
+# Point to zerolib directory within bflat
+$BUILD_PATH = 'bflat\src\zerolib\'
 
 function build {
-  &"${BFLAT}bflat.exe" build --stdlib:zero --no-reflection --no-stacktrace-data --no-globalization --no-exception-messages --os:uefi -o:bootx64.efi
+  $a = $pwd
+  cp Program.cs $BUILD_PATH
+  cd $BUILD_PATH
+  &"${BFLAT}bflat.exe" build --stdlib:none --no-reflection --no-stacktrace-data --no-globalization --no-exception-messages --os:uefi -o:$a\bootx64.efi
+  cd $a
 }
 
 function boot {
