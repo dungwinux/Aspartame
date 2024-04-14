@@ -2,7 +2,7 @@
 using Thread = System.Threading.Thread;
 
 void clearScreen() {
-  var height = 30;
+  var height = 40;
   var width = 120;
   Console.CursorVisible = false;
   for (int i = 0; i < height; ++i) {
@@ -34,21 +34,13 @@ void writeHex(uint x, uint z = 8) {
   }
 }
 
+// Wait 1 second for displaying on screen
 Thread.Sleep(1000);
 
-// for (int i = 0; i <= 16; ++i)
-// {
-//    unsafe
-//    {
-//        x.items[i] = 0x41;
-//   }
-// }
-// System.Console.ReadKey(false);
 Console.Title = "TetrUEFI";
 
 while (true) {
   clearScreen();
-  //                  ||$$$$$$$$$$$$$$$$$$$$||
   Console.SetCursorPosition(30, 5);
   Console.WriteLine("<TetrUEFI>");
 
@@ -155,18 +147,18 @@ while (true) {
             continue;
           }
           break;
-        // case ConsoleKey.DownArrow: // rotate counterclockwise
-        //   var nnr = (r + 3) % 4;
-        //   var nnewPos = g.DrawRotate(x, y, t, r, nnr);
-        //   x = nnewPos[0];
-        //   y = nnewPos[1];
-        //   r = nnewPos[2];
-        //   v = nnewPos[3];
-        //   if(v == 1){
-        //     continue;
-        //   }
-        //   break;
-        // case ConsoleKey.Escape: // rotate 180
+        case ConsoleKey.DownArrow: // rotate counterclockwise
+          var nnr = (r + 3) % 4;
+          var nnewPos = g.DrawRotate(x, y, t, r, nnr);
+          x = nnewPos[0];
+          y = nnewPos[1];
+          r = nnewPos[2];
+          v = nnewPos[3];
+          if(v == 1){
+            continue;
+          }
+          break;
+        // case ConsoleKey.F1: // rotate 180
           // var nnnr = (r + 3) % 4;
           // var nnnewPos = g.DrawRotate(x, y, t, r, nnnr);
           // x = nnnewPos[0];
@@ -177,13 +169,13 @@ while (true) {
           //   continue;
           // }
           // break;
-        case ConsoleKey.DownArrow: //hard drop
+        case ConsoleKey.Escape: //hard drop
           while ((v = g.Draw(x, y, t, r)) != 0) { //continuously move down until v==2 (ground hit)
             y += 1;
             if (v == 2) {
               break;
             }
-            g.Undraw(x, y-1, t, r);
+            g.Undraw(x, y - 1, t, r);
           }
           hit_tick = hit_tick_max; //instant ground
           continue;
@@ -326,57 +318,57 @@ unsafe struct GameArea {
 
   //index aSRS[startOrientation][change][kicktotry][x or y move]
   //change is in order 0: clockwise (+1)     1: 180 (+2)      2: ccw (+3)
-  int[][][][] aSRS = {// A: JLSTZ
+  int[][][][] aSRS = { // A: JLSTZ
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,1},new int[]{0,-2},new int[]{-1,-2}},//new int[]{1,2}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,1},new int[]{0,-2},new int[]{1,-2}   }//new int[]{1,4}:
+      new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, 1},new int[]{0, -2},new int[]{-1, -2}}, //new int[]{1, 2}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, 1},new int[]{0, -2},new int[]{1, -2}   }, //new int[]{1, 4}:
     },
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,-1},new int[]{0,2},new int[]{1,2}    },//new int[]{2,3}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,-1},new int[]{0,2},new int[]{1,2}    }//new int[]{2,1}:
+      new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, -1},new int[]{0, 2},new int[]{1, 2}    }, //new int[]{2, 3}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, -1},new int[]{0, 2},new int[]{1, 2}    }, //new int[]{2, 1}:
     },
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,1},new int[]{0,-2},new int[]{1,-2}   },//new int[]{3,4}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,1},new int[]{0,-2},new int[]{-1,-2}}//new int[]{3,2}:
+      new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, 1},new int[]{0, -2},new int[]{1, -2}   }, //new int[]{3, 4}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, 1},new int[]{0, -2},new int[]{-1, -2}}, //new int[]{3, 2}:
     },
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,-1},new int[]{0,2},new int[]{-1,2} },//new int[]{4,3}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,-1},new int[]{0,2},new int[]{-1,2} }//new int[]{4,1}:
+      new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, -1},new int[]{0, 2},new int[]{-1, 2} }, //new int[]{4, 3}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, -1},new int[]{0, 2},new int[]{-1, 2} }, //new int[]{4, 1}:
     }
   };
 
   int[][][][] iSRS = {
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{-2,0},new int[]{1,0},new int[]{-2,-1},new int[]{1,2}},//new int[]{1,2}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{2,0},new int[]{-1,2},new int[]{2,-1}}//new int[]{1,4}:
+      new int[][]{new int[]{0, 0},new int[]{-2, 0},new int[]{1, 0},new int[]{-2, -1},new int[]{1, 2}  }, //new int[]{1, 2}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{2, 0},new int[]{-1, 2},new int[]{2, -1}  }, //new int[]{1, 4}:
     },
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{2,0},new int[]{-1,2},new int[]{2,-1}},//new int[]{2,3}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{2,0},new int[]{-1,0},new int[]{2,1},new int[]{-1,-2}}//new int[]{2,1}:
+      new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{2, 0},new int[]{-1, 2},new int[]{2, -1}  }, //new int[]{2, 3}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{2, 0},new int[]{-1, 0},new int[]{2, 1},new int[]{-1, -2}  }, //new int[]{2, 1}:
     },
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{2,0},new int[]{-1,0},new int[]{2,1},new int[]{-1,-2}},//new int[]{3,4}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{-2,0},new int[]{1,-2},new int[]{-2,1}}//new int[]{3,2}:
+      new int[][]{new int[]{0, 0},new int[]{2, 0},new int[]{-1, 0},new int[]{2, 1},new int[]{-1, -2}  }, //new int[]{3, 4}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{-2, 0},new int[]{1, -2},new int[]{-2, 1}  }, //new int[]{3, 2}:
     },
     new int[][][]{
-      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{-2,0},new int[]{1,-2},new int[]{-2,1}},//new int[]{4,1}:
-      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
-      new int[][]{new int[]{0,0},new int[]{-2,0},new int[]{1,0},new int[]{-2,-1},new int[]{1,2}}//new int[]{4,3}:
+      new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{-2, 0},new int[]{1, -2},new int[]{-2, 1}  }, //new int[]{4, 1}:
+      new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
+      new int[][]{new int[]{0, 0},new int[]{-2, 0},new int[]{1, 0},new int[]{-2, -1},new int[]{1, 2}  }, //new int[]{4, 3}:
     }
   };
 
   int[][][][] oSRS = {
-    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}},
-    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}},
-    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}},
-    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}}
+    new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}},
+    new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}},
+    new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}},
+    new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}}
   };
 
 
@@ -418,7 +410,7 @@ unsafe struct GameArea {
     int rc = 1;
     var pix = GetPiece(piece);
     int k = GetBase(piece);
-    int change = (rotation-prevRot+3)%4;
+    int change = (rotation - prevRot + 3) % 4;
     int[][] srs = GetSRS(piece, prevRot, change);
     for(int s = 0; s < srs.Length; ++s){
       // rc = 1;
@@ -452,7 +444,7 @@ unsafe struct GameArea {
             }
             
             var ground = areaIndex + Width;
-            if (ground >= Area || _area[ground] != ' ') {//ground hit, invalid
+            if (ground >= Area || _area[ground] != ' ') { //ground hit, invalid
               rc = 2;
             }
           }
@@ -478,7 +470,7 @@ unsafe struct GameArea {
           rc = 0;
           continue;
         }
-        return new int[]{x+kickX, y+kickY, rotation, rc};
+        return new int[]{x + kickX, y + kickY, rotation, rc};
       }
     }
     return new int[]{x, y, prevRot, rc};
@@ -509,7 +501,7 @@ unsafe struct GameArea {
           }
           
           var ground = areaIndex + Width;
-          if (ground >= Area || _area[ground] != ' ') {//ground hit, "return" 2!
+          if (ground >= Area || _area[ground] != ' ') { //ground hit, "return" 2!
             rc = 2;
           }
         }
