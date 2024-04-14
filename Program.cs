@@ -75,7 +75,7 @@ while (true) {
   var noti = "Welcome to TetrUEFI!";
   var noti_update = true;
   var DEBUG = true;
-  var hit_tick_max = 30;
+  var hit_tick_max = 10;
 
   // Logic:
   // - Spawn new tetromino (random, "bag")
@@ -138,22 +138,48 @@ while (true) {
     if (Console.KeyAvailable) {
       var keyInfo = Console.ReadKey(intercept: true);
       switch (keyInfo.Key) {
-        case ConsoleKey.UpArrow:
+        case ConsoleKey.UpArrow: //rotate clockwise
           var nr = (r + 1) % 4;
-          if ((v = g.Draw(x, y, t, nr)) != 0) {
-            r = nr;
+          var newPos = g.DrawRotate(x, y, t, r, nr);
+          x = newPos[0];
+          y = newPos[1];
+          r = newPos[2];
+          v = newPos[3];
+          if(v != 0){
             continue;
           }
           break;
-        case ConsoleKey.DownArrow:
-          while ((v = g.Draw(x, y + 1, t, r)) != 0) {
+        case ConsoleKey.DownArrow: // rotate counterclockwise
+          var nnr = (r + 3) % 4;
+          var nnewPos = g.DrawRotate(x, y, t, r, nnr);
+          x = nnewPos[0];
+          y = nnewPos[1];
+          r = nnewPos[2];
+          v = nnewPos[3];
+          if(v != 0){
+            continue;
+          }
+          break;
+        // case ConsoleKey.Escape: // rotate 180
+          // var nnnr = (r + 3) % 4;
+          // var nnnewPos = g.DrawRotate(x, y, t, r, nnnr);
+          // x = nnnewPos[0];
+          // y = nnnewPos[1];
+          // r = nnnewPos[2];
+          // v = nnnewPos[3];
+          // if(v != 0){
+          //   continue;
+          // }
+          // break;
+        case ConsoleKey.Escape: //hard drop
+          while ((v = g.Draw(x, y + 1, t, r)) != 0) { //continuously move down until v==2 (ground hit)
             y += 1;
             if (v == 2) {
               break;
             }
             g.Undraw(x, y, t, r);
           }
-          hit_tick = hit_tick_max;
+          hit_tick = hit_tick_max; //instant ground
           continue;
         case ConsoleKey.LeftArrow:
           if ((v = g.Draw(x - 1, y, t, r)) != 0) {
@@ -261,6 +287,7 @@ unsafe struct GameArea {
     return TI;
   }
 
+
   int GetBase(Tetromino t) {
     switch (t) {
       case Tetromino.I: return TI_base;
@@ -277,6 +304,72 @@ unsafe struct GameArea {
   int GetRotMulti(Tetromino t) {
     var d = GetBase(t);
     return d * d;
+  }
+
+  //index aSRS[startOrientation][change][kicktotry][x or y move]
+  //change is in order 0: clockwise (+1)     1: 180 (+2)      2: ccw (+3)
+  int[][][][] aSRS = {// A: JLSTZ
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,1},new int[]{0,-2},new int[]{-1,-2}},//new int[]{1,2}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,1},new int[]{0,-2},new int[]{1,-2}   }//new int[]{1,4}:
+    },
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,-1},new int[]{0,2},new int[]{1,2}    },//new int[]{2,3}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,-1},new int[]{0,2},new int[]{1,2}    }//new int[]{2,1}:
+    },
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{1,1},new int[]{0,-2},new int[]{1,-2}   },//new int[]{3,4}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,1},new int[]{0,-2},new int[]{-1,-2}}//new int[]{3,2}:
+    },
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,-1},new int[]{0,2},new int[]{-1,2} },//new int[]{4,3}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{-1,-1},new int[]{0,2},new int[]{-1,2} }//new int[]{4,1}:
+    }
+  };
+
+  int[][][][] iSRS = {
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{-2,0},new int[]{1,0},new int[]{-2,-1},new int[]{1,2}},//new int[]{1,2}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{2,0},new int[]{-1,2},new int[]{2,-1}}//new int[]{1,4}:
+    },
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{-1,0},new int[]{2,0},new int[]{-1,2},new int[]{2,-1}},//new int[]{2,3}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{2,0},new int[]{-1,0},new int[]{2,1},new int[]{-1,-2}}//new int[]{2,1}:
+    },
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{2,0},new int[]{-1,0},new int[]{2,1},new int[]{-1,-2}},//new int[]{3,4}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{-2,0},new int[]{1,-2},new int[]{-2,1}}//new int[]{3,2}:
+    },
+    new int[][][]{
+      new int[][]{new int[]{0,0},new int[]{1,0},new int[]{-2,0},new int[]{1,-2},new int[]{-2,1}},//new int[]{4,1}:
+      new int[][]{new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0},new int[]{0,0}     }, //180
+      new int[][]{new int[]{0,0},new int[]{-2,0},new int[]{1,0},new int[]{-2,-1},new int[]{1,2}}//new int[]{4,3}:
+    }
+  };
+
+  int[][][][] oSRS = {
+    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}},
+    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}},
+    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}},
+    new int[][][]{new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}},new int[][]{new int[]{0,0}}}
+  };
+
+
+  int[][] GetSRS(Tetromino t, int oldR, int change){
+    if(t == Tetromino.O){
+      return oSRS[oldR][change];
+    }
+    if(t == Tetromino.I){
+      return iSRS[oldR][change];
+    }
+    return aSRS[oldR][change];
   }
 
   ConsoleColor GetColor(Tetromino t) {
@@ -302,6 +395,77 @@ unsafe struct GameArea {
     _area[x + y * Width] = ch;
   }
 
+  public int[] DrawRotate(int x, int y, Tetromino piece, int prevRot, int rotation) { //ret
+    char d = (char)(int)piece;
+    int rc = 1;
+    var pix = GetPiece(piece);
+    int k = GetBase(piece);
+    int change = (rotation-prevRot+3)%4;
+    int[][] srs = GetSRS(piece, prevRot, change);
+    for(int s = 0; s < srs.Length; ++s){
+      // rc = 1;
+      int kickX = srs[s][0];
+      int kickY = -srs[s][1];
+      bool kickValid = true;
+      rc = 1;
+      for (int i = 0; i < k; ++i) {
+        for (int j = 0; j < k; ++j) {
+          if (pix[rotation * GetRotMulti(piece) + j + i * k] == 1) {
+            var xpj = x + j + kickX;
+            var ypi = y + i + kickY;
+            if (xpj < 0 || xpj >= Width) { // oob, return!
+              kickValid = false;
+              rc = 0;
+              break;
+            }
+            if (ypi >= Height) { // in ground, return!
+              kickValid = false;
+              rc = 0;
+              break;
+            }
+            var areaIndex = xpj + ypi * Width;
+            // if (z >= Area) {
+            //   rc = 3;
+            // }
+            if (areaIndex >= Area || (areaIndex >= 0 && _area[areaIndex] != ' ')) { // collision, return!
+              kickValid = false;
+              rc = 0;
+              break;  
+            }
+            
+            var ground = areaIndex + Width;
+            if (ground >= Area || _area[ground] != ' ') {//ground hit, invalid
+              rc = 2;
+            }
+          }
+        }
+        if(!kickValid){
+          break;
+        }
+      }
+      if(kickValid){ // attempt to draw
+        int newDraws = 0;
+        for (int i = 0; i < k; ++i) {
+          for (int j = 0; j < k; ++j) {
+            if (pix[rotation * GetRotMulti(piece) + j + i * k] == 1) {
+              var areaIndex = (x + j + kickX) + (y + i + kickY) * Width;
+              if (areaIndex >= 0 && areaIndex < Area) {
+                _area[areaIndex] = d;
+                ++newDraws;
+              }
+            }
+          }
+        }
+        if(newDraws == 0){
+          rc = 0;
+          continue;
+        }
+        return new int[]{x+kickX, y+kickY, rotation, rc};
+      }
+    }
+    return new int[]{x, y, prevRot, rc};
+  }
+
   public int Draw(int x, int y, Tetromino piece, int rotation) {
     char d = (char)(int)piece;
     int rc = 1;
@@ -312,40 +476,40 @@ unsafe struct GameArea {
         if (pix[rotation * GetRotMulti(piece) + j + i * k] == 1) {
           var xpj = x + j;
           var ypi = y + i;
-          if (xpj < 0 || xpj >= Width) {
+          if (xpj < 0 || xpj >= Width) { // oob, return!
             return 0;
           }
-          if (ypi >= Height) {
+          if (ypi >= Height) { // oob, return!
             return 0;
           }
-          var z = xpj + ypi * Width;
+          var areaIndex = xpj + ypi * Width;
           // if (z >= Area) {
           //   rc = 3;
           // }
-          if (z >= Area || (z >= 0 && _area[z] != ' ')) {
+          if (areaIndex >= Area || (areaIndex >= 0 && _area[areaIndex] != ' ')) { // collision, return!
             return 0;
           }
           
-          var ground = z + Width;
-          if (ground >= Area || _area[ground] != ' ') {
+          var ground = areaIndex + Width;
+          if (ground >= Area || _area[ground] != ' ') {//ground hit, "return" 2!
             rc = 2;
           }
         }
       }
     }
-    int c = 0;
+    int newDraws = 0;
     for (int i = 0; i < k; ++i) {
       for (int j = 0; j < k; ++j) {
         if (pix[rotation * GetRotMulti(piece) + j + i * k] == 1) {
-          var z = (x + j) + (y + i) * Width;
-          if (z >= 0 && z < Area) {
-            _area[z] = d;
-            ++c;
+          var areaIndex = (x + j) + (y + i) * Width;
+          if (areaIndex >= 0 && areaIndex < Area) {
+            _area[areaIndex] = d;
+            ++newDraws;
           }
         }
       }
     }
-    return c == 0 ? 0 : rc;
+    return newDraws == 0 ? 0 : rc;
   }
 
   public int Undraw(int x, int y, Tetromino piece, int rotation) {
@@ -456,6 +620,8 @@ unsafe struct GameArea {
           Console.Write('#');
         } else {
           Console.ForegroundColor = ConsoleColor.DarkGray;
+          // Console.Write(' ');
+          // Console.Write(' ');
           Console.Write('$');
           Console.Write('$');
         }
