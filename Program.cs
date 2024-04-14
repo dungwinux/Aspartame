@@ -146,20 +146,26 @@ while (true) {
           r = newPos[2];
           v = newPos[3];
           if(v == 1){
+            g.Undraw(x, y, t, r);
+            if ((v = g.Draw(x, y + 1, t, r)) != 0) {
+              y += 1;
+              continue;
+            }
+            v = g.Draw(x, y, t, r);
             continue;
           }
           break;
-        case ConsoleKey.DownArrow: // rotate counterclockwise
-          var nnr = (r + 3) % 4;
-          var nnewPos = g.DrawRotate(x, y, t, r, nnr);
-          x = nnewPos[0];
-          y = nnewPos[1];
-          r = nnewPos[2];
-          v = nnewPos[3];
-          if(v == 1){
-            continue;
-          }
-          break;
+        // case ConsoleKey.DownArrow: // rotate counterclockwise
+        //   var nnr = (r + 3) % 4;
+        //   var nnewPos = g.DrawRotate(x, y, t, r, nnr);
+        //   x = nnewPos[0];
+        //   y = nnewPos[1];
+        //   r = nnewPos[2];
+        //   v = nnewPos[3];
+        //   if(v == 1){
+        //     continue;
+        //   }
+        //   break;
         // case ConsoleKey.Escape: // rotate 180
           // var nnnr = (r + 3) % 4;
           // var nnnewPos = g.DrawRotate(x, y, t, r, nnnr);
@@ -171,25 +177,37 @@ while (true) {
           //   continue;
           // }
           // break;
-        case ConsoleKey.Escape: //hard drop
-          while ((v = g.Draw(x, y + 1, t, r)) != 0) { //continuously move down until v==2 (ground hit)
+        case ConsoleKey.DownArrow: //hard drop
+          while ((v = g.Draw(x, y, t, r)) != 0) { //continuously move down until v==2 (ground hit)
             y += 1;
             if (v == 2) {
               break;
             }
-            g.Undraw(x, y, t, r);
+            g.Undraw(x, y-1, t, r);
           }
           hit_tick = hit_tick_max; //instant ground
           continue;
         case ConsoleKey.LeftArrow:
           if ((v = g.Draw(x - 1, y, t, r)) != 0) {
             x -= 1;
+            g.Undraw(x, y, t, r);
+            if ((v = g.Draw(x, y + 1, t, r)) != 0) {
+              y += 1;
+              continue;
+            }
+            v = g.Draw(x, y, t, r);
             continue;
           }
           break;
         case ConsoleKey.RightArrow:
           if ((v = g.Draw(x + 1, y, t, r)) != 0) {
             x += 1;
+            g.Undraw(x, y, t, r);
+            if ((v = g.Draw(x, y + 1, t, r)) != 0) {
+              y += 1;
+              continue;
+            }
+            v = g.Draw(x, y, t, r);
             continue;
           }
           break;
@@ -620,10 +638,10 @@ unsafe struct GameArea {
           Console.Write('#');
         } else {
           Console.ForegroundColor = ConsoleColor.DarkGray;
-          // Console.Write(' ');
-          // Console.Write(' ');
-          Console.Write('$');
-          Console.Write('$');
+          Console.Write(' ');
+          Console.Write(' ');
+          //Console.Write('$');
+          //Console.Write('$');
         }
       }
     }
