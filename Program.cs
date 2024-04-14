@@ -43,6 +43,8 @@ while (true) {
   clearScreen();
   Console.SetCursorPosition(30, 5);
   Console.WriteLine("<TetrUEFI>");
+  Console.SetCursorPosition(30, 6);
+  Console.WriteLine("by @dungwinux & @atch2203");
 
   Console.CursorVisible = false;
 
@@ -170,13 +172,15 @@ while (true) {
           // }
           // break;
         case ConsoleKey.Escape: //hard drop
-          while ((v = g.Draw(x, y, t, r)) != 0) { //continuously move down until v==2 (ground hit)
-            y += 1;
+          var ny = y < 0 ? 0 : y;
+          while ((v = g.Draw(x, ny, t, r)) != 0) { //continuously move down until v==2 (ground hit)
+            ny += 1;
             if (v == 2) {
               break;
             }
-            g.Undraw(x, y - 1, t, r);
+            g.Undraw(x, ny - 1, t, r);
           }
+          y = ny - 1;
           hit_tick = hit_tick_max; //instant ground
           continue;
         case ConsoleKey.LeftArrow:
