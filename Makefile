@@ -29,6 +29,7 @@ BFLAT ?= $(shell $(WH) bflat)
 ifeq ($(BFLAT),)
 $(error Cannot find bflat)
 endif
+LINUX_LINK:=--ldflags "$(dir $(BFLAT))/lib/linux/x64/glibc/libSystem.Native.a"
 BUILD_PATH:=bflat$(SEP)src$(SEP)zerolib$(SEP)
 BUILD_FLAG:=--stdlib:none --no-reflection --no-stacktrace-data --no-globalization --no-exception-messages
 
@@ -36,5 +37,5 @@ eq = $(and $(findstring x$(1),x$(2)), $(findstring x$(2),x$(1)))
 
 %:
 	$(CP) Program.cs $(BUILD_PATH)
-	cd $(BUILD_PATH) && $(BFLAT) build $(BUILD_FLAG) --os:$@ -o:"$(CURDIR)/$(if $(call eq,$@,uefi),bootx64.efi,Aspartame$(if $(call eq,$@,windows),.exe,))"
+	cd $(BUILD_PATH) && $(BFLAT) build $(BUILD_FLAG) $(if $(call eq,$@,linux),$(LINUX_LINK),) --os:$@ -o:"$(CURDIR)/$(if $(call eq,$@,uefi),bootx64.efi,Aspartame$(if $(call eq,$@,windows),.exe,))"
 
