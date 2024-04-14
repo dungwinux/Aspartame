@@ -173,7 +173,7 @@ while (true) {
           // y = nnnewPos[1];
           // r = nnnewPos[2];
           // v = nnnewPos[3];
-          // if(v == 1){
+          // if(v != 0){
           //   continue;
           // }
           // break;
