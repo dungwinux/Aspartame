@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Thread = System.Threading.Thread;
 
 void clearScreen() {
@@ -70,6 +70,7 @@ while (true) {
   var noti_update = true;
   var DEBUG = true;
   var hit_tick_max = 10;
+  var placed_count = 0;
 
   // Logic:
   // - Spawn new tetromino (random, "bag")
@@ -77,7 +78,6 @@ while (true) {
   // - Add gravity
   // - Compute change (gravity or change first?)
   // - If touched down (Gravity end), start counting tick of action. If tick is > X, commit change
-  // TODO: HitTest
 
   g.Render(gx, gy, true);
   while (inLoop) {
@@ -101,6 +101,10 @@ while (true) {
       t = (Tetromino)bag.getRandom();
       noti = "New drop!";
       noti_update = true;
+      if (placed_count > 200 && g.CountNonBlank() == 0) {
+        inLoop = true;
+        continue;
+      }
     }
     if (g.SolveLine() > 0) {
       g.Render(gx, gy, false);
@@ -215,6 +219,11 @@ while (true) {
     }
     v = g.Draw(x, y, t, r);
   }
+  Console.SetCursorPosition(0, 0);
+  Console.ForegroundColor = ConsoleColor.Gray;
+  Console.WriteLine("You win!");
+
+  while (true) {}
 }
 
 enum Tetromino: uint {
@@ -645,6 +654,13 @@ unsafe struct GameArea {
   public void Render(int offset_x, int offset_y, bool init) {
     if (init) RenderBorder(offset_x, offset_y);
     RenderBoard(offset_x + 2, offset_y);
+  }
+  public int CountNonBlank() {
+    int blank = Height;
+    for (var i = 0; i < Height; ++i) {
+      blank -= IsBlankLine(i) ? 1 : 0;
+    }
+    return blank;
   }
 }
 
