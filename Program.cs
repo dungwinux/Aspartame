@@ -41,10 +41,18 @@ Console.Title = "TetrUEFI";
 
 while (true) {
   clearScreen();
-  Console.SetCursorPosition(30, 5);
+  Console.SetCursorPosition(27, 5);
   Console.WriteLine("<TetrUEFI>");
-  Console.SetCursorPosition(30, 6);
+  Console.SetCursorPosition(27, 6);
   Console.WriteLine("by @dungwinux & @atch2203");
+  Console.SetCursorPosition(27, 9);
+  Console.WriteLine("Move : LArrow, RArrow");
+  Console.SetCursorPosition(27, 10);
+  Console.WriteLine("CCW  : F1, DArrow");
+  Console.SetCursorPosition(27, 11);
+  Console.WriteLine("CW   : F2, UArrow");
+  Console.SetCursorPosition(27, 12);
+  Console.WriteLine("Hard : Escape");
 
   Console.CursorVisible = false;
 
@@ -139,6 +147,7 @@ while (true) {
       var keyInfo = Console.ReadKey(intercept: true);
       switch (keyInfo.Key) {
         case ConsoleKey.UpArrow: //rotate clockwise
+        case ConsoleKey.F2:
           var nr = (r + 1) % 4;
           var newPos = g.DrawRotate(x, y, t, r, nr);
           x = newPos[0];
@@ -156,6 +165,7 @@ while (true) {
           }
           break;
         case ConsoleKey.DownArrow: // rotate counterclockwise
+        case ConsoleKey.F1:
           var nnr = (r + 3) % 4;
           var nnewPos = g.DrawRotate(x, y, t, r, nnr);
           x = nnewPos[0];
