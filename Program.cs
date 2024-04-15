@@ -68,7 +68,7 @@ while (true) {
   var v = 0;
   var noti = "Welcome to TetrUEFI!";
   var noti_update = true;
-  var DEBUG = true;
+  var DEBUG = false;
   var hit_tick_max = 10;
   var placed_count = 0;
 
@@ -107,8 +107,8 @@ while (true) {
       g.Render(gx, gy, false);
     }
     
-    if (placed_count > 200 && g.CountNonBlank() == 0) {
-      inLoop = true;
+    if (placed_count > 11 && g.CountNonBlank() == 0) {
+      inLoop = false;
       continue;
     }
 
