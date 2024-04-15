@@ -101,13 +101,15 @@ while (true) {
       t = (Tetromino)bag.getRandom();
       noti = "New drop!";
       noti_update = true;
-      if (placed_count > 200 && g.CountNonBlank() == 0) {
-        inLoop = true;
-        continue;
-      }
+      ++placed_count;
     }
     if (g.SolveLine() > 0) {
       g.Render(gx, gy, false);
+    }
+    
+    if (placed_count > 200 && g.CountNonBlank() == 0) {
+      inLoop = true;
+      continue;
     }
 
     Console.ForegroundColor = ConsoleColor.Gray;
