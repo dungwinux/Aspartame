@@ -354,117 +354,43 @@ unsafe struct GameArea {
     return d * d;
   }
 
-  //index aSRS[startOrientation][change][kicktotry][x or y move]
-  //change is in order 0: clockwise (+1)     1: 180 (+2)      2: ccw (+3)
-  // int[][][][] aSRS = { // A: JLSTZ
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, 1},new int[]{0, -2},new int[]{-1, -2}}, //new int[]{1, 2}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, 1},new int[]{0, -2},new int[]{1, -2}   }, //new int[]{1, 4}:
-  //   },            
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, -1},new int[]{0, 2},new int[]{1, 2}    }, //new int[]{2, 3}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, -1},new int[]{0, 2},new int[]{1, 2}    }, //new int[]{2, 1}:
-  //   },            
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{1, 1},new int[]{0, -2},new int[]{1, -2}   }, //new int[]{3, 4}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, 1},new int[]{0, -2},new int[]{-1, -2}}, //new int[]{3, 2}:
-  //   },            
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, -1},new int[]{0, 2},new int[]{-1, 2} }, //new int[]{4, 3}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{-1, -1},new int[]{0, 2},new int[]{-1, 2} }, //new int[]{4, 1}:
-  //   }
-  // };
+  
 
   int[] aSRSList = {
-
-0,0,-1,0,-1,1,0,-2,-1,-2,//1,2:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,1,0,1,1,0,-2,1,-2,//1,4:
-
-
-0,0,1,0,1,-1,0,2,1,2,//2,3:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,1,0,1,-1,0,2,1,2,//2,1:
-
-
-0,0,1,0,1,1,0,-2,1,-2,//3,4:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-1,0,-1,1,0,-2,-1,-2,//3,2:
-
-
-0,0,-1,0,-1,-1,0,2,-1,2,//4,3:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-1,0,-1,-1,0,2,-1,2//4,1:
-
+   9, 9, -1, 9, -1, 1, 9, -2, -1, -2,
+    9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+    9, 9, 1, 9, 1, 1, 9, -2, 1, -2,
+    9, 9, 1, 9, 1, -1, 9, 2, 1, 2,
+    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+    9, 9, 1, 9, 1, -1, 9, 2, 1, 2,
+    9, 9, 1, 9, 1, 1, 9, -2, 1, -2,
+    9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+    9, 9, -1, 9, -1, 1, 9, -2, -1, -2,
+    9, 9, -1, 9, -1, -1, 9, 2, -1, 2,
+    9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+    9, 9, -1, 9, -1, -1, 9, 2, -1, 2,
   };
-  // int[][][][] iSRS = {
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{-2, 0},new int[]{1, 0},new int[]{-2, -1},new int[]{1, 2}  }, //new int[]{1, 2}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{2, 0},new int[]{-1, 2},new int[]{2, -1}  }, //new int[]{1, 4}:
-  //   },
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{-1, 0},new int[]{2, 0},new int[]{-1, 2},new int[]{2, -1}  }, //new int[]{2, 3}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{2, 0},new int[]{-1, 0},new int[]{2, 1},new int[]{-1, -2}  }, //new int[]{2, 1}:
-  //   },
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{2, 0},new int[]{-1, 0},new int[]{2, 1},new int[]{-1, -2}  }, //new int[]{3, 4}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{-2, 0},new int[]{1, -2},new int[]{-2, 1}  }, //new int[]{3, 2}:
-  //   },
-  //   new int[][][]{
-  //     new int[][]{new int[]{0, 0},new int[]{1, 0},new int[]{-2, 0},new int[]{1, -2},new int[]{-2, 1}  }, //new int[]{4, 1}:
-  //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
-  //     new int[][]{new int[]{0, 0},new int[]{-2, 0},new int[]{1, 0},new int[]{-2, -1},new int[]{1, 2}  }, //new int[]{4, 3}:
-  //   }
-  // };
+
 int[] iSRSList = {
-
-0,0,-2,0,1,0,-2,-1,1,2,//1,2:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-1,0,2,0,-1,2,2,-1,//1,4:
-
-
-0,0,-1,0,2,0,-1,2,2,-1,//2,3:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,2,0,-1,0,2,1,-1,-2,//2,1:
-
-
-0,0,2,0,-1,0,2,1,-1,-2,//3,4:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,1,0,-2,0,1,-2,-2,1,//3,2:
-
-
-0,0,1,0,-2,0,1,-2,-2,1,//4,1:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-2,0,1,0,-2,-1,1,2//4,3:
-
+  9, 9, -2, 9, 1, 9, -2, -1, 1, 2, 
+  9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+  9, 9, -1, 9, 2, 9, -1, 2, 2, -1, 
+  9, 9, -1, 9, 2, 9, -1, 2, 2, -1, 
+  9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+  9, 9, 2, 9, -1, 9, 2, 1, -1, -2, 
+  9, 9, 2, 9, -1, 9, 2, 1, -1, -2, 
+  9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+  9, 9, 1, 9, -2, 9, 1, -2, -2, 1, 
+  9, 9, 1, 9, -2, 9, 1, -2, -2, 1, 
+  9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+  9, 9, -2, 9, 1, 9, -2, -1, 1, 2, 
   };
 
          
   int aisrslen = 5;
   int osrslen = 1;
 
-  //  int[][][][] oSRS = {
-  //   new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}},
-  //   new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}},
-  //   new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}},
-  //   new int[][][]{new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}},new int[][]{new int[]{0, 0}}}
-  // };
-
-
-  // int[][] GetSRS(Tetromino t, int oldR, int change){
-  //   if(t == Tetromino.O){
-  //     return oSRS[oldR][change];
-  //   }
-   
-  //   return aSRS[oldR][change];
-  // }
+ 
 
   int GetSRSLen(Tetromino t){
     if(t == Tetromino.O){
@@ -497,7 +423,7 @@ int[] iSRSList = {
   }
 
   int getsrsindex(Tetromino piece, int prevRot, int change, int s, int i){
-    if(piece == Tetromino.O || piece == Tetromino.I){
+    if(piece == Tetromino.O){
       return 0;
     }
     if(piece == Tetromino.I){
@@ -522,7 +448,14 @@ int[] iSRSList = {
       // int kickX = srs[s][0];
       // int kickY = -srs[s][1];
       kickX = getsrsindex(piece, prevRot, change, s, 0);
+      if(kickX == 9){
+        kickX = 0;
+      }
       kickY = getsrsindex(piece, prevRot, change, s, 1);
+      if(kickY == 9){
+        kickY = 0;
+      }
+      kickY = -1 * kickY;
       kickValid = 1;
       rc = 1;
       for (int i = 0; i < k; ++i) {
@@ -579,7 +512,6 @@ int[] iSRSList = {
           rc = 0;
           continue;
         }
-        printDebug("kick worked");
         newPos[0] = x+kickX;
         newPos[1] = y+kickY;
         newPos[2] = rotation;
@@ -666,12 +598,7 @@ int[] iSRSList = {
           }
         }
       }
-    }  void printDebug(string input){
-      Console.SetCursorPosition(30, 3);
-      Console.WriteLine("                                                            ");
-      Console.SetCursorPosition(30, 3);
-      Console.WriteLine(input);
-  }
+    }  
     int c = 0;
     for (int i = 0; i < k; ++i) {
       for (int j = 0; j < k; ++j) {
@@ -828,3 +755,9 @@ struct Bag
   }
 
 }
+
+/*
+
+
+
+*/
