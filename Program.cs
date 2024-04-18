@@ -507,6 +507,7 @@ int[] iSRSList = {
   }
 
   public void DrawRotate(int x, int y, Tetromino piece, int prevRot, int rotation) { //ret
+    printDebug("");
     char d = (char)(int)piece;
     var rc = 1;
     var pix = GetPiece(piece);
@@ -578,6 +579,7 @@ int[] iSRSList = {
           rc = 0;
           continue;
         }
+        printDebug("kick worked");
         newPos[0] = x+kickX;
         newPos[1] = y+kickY;
         newPos[2] = rotation;
@@ -664,7 +666,12 @@ int[] iSRSList = {
           }
         }
       }
-    }
+    }  void printDebug(string input){
+      Console.SetCursorPosition(30, 3);
+      Console.WriteLine("                                                            ");
+      Console.SetCursorPosition(30, 3);
+      Console.WriteLine(input);
+  }
     int c = 0;
     for (int i = 0; i < k; ++i) {
       for (int j = 0; j < k; ++j) {
@@ -766,6 +773,13 @@ int[] iSRSList = {
     }
     return blank;
   }
+
+  void printDebug(string input){
+      Console.SetCursorPosition(30, 3);
+      Console.WriteLine("                                                            ");
+      Console.SetCursorPosition(30, 3);
+      Console.WriteLine(input);
+  }
 }
 
 // https://en.wikipedia.org/wiki/Xorshift
@@ -812,4 +826,5 @@ struct Bag
     Remove(idx);
     return t - 1;
   }
+
 }
