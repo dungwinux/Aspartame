@@ -77,7 +77,7 @@ while (true) {
   var v = 0;
   var noti = "Welcome to TetrUEFI!";
   var noti_update = true;
-  var DEBUG = false;
+  var DEBUG = true;
   var hit_tick_max = 10;
   var placed_count = 0;
 
@@ -90,7 +90,7 @@ while (true) {
 
   g.Render(gx, gy, true);
   while (inLoop) {
-    Thread.Sleep(100);
+    Thread.Sleep(200);
     g.Render(gx, gy, false);
     if (v == 2) {
       ++hit_tick;
@@ -320,6 +320,20 @@ unsafe struct GameArea {
     0, 1, 0, 1, 1, 0, 1, 0, 0,
   };
   const int TZ_base = 3;
+ int[] aS = {
+    0,0,-1,0,-1,1,0,-2,-1,-2,//1,2:
+    0,0,0,0,0,0,0,0,0,0,//180
+    0,0,1,0,1,1,0,-2,1,-2,//1,4:
+    0,0,1,0,1,-1,0,2,1,2,//2,3:
+    0,0,0,0,0,0,0,0,0,0,//180
+    0,0,1,0,1,-1,0,2,1,2,//2,1:
+    0,0,1,0,1,1,0,-2,1,-2,//3,4:
+    0,0,0,0,0,0,0,0,0,0,//180
+    0,0,-1,0,-1,1,0,-2,-1,-2,//3,2:
+    0,0,-1,0,-1,-1,0,2,-1,2,//4,3:
+    0,0,0,0,0,0,0,0,0,0,//180
+    0,0,-1,0,-1,-1,0,2,-1,2//4,1:
+  };
 
 
   int[] GetPiece(Tetromino t) {
@@ -379,28 +393,7 @@ unsafe struct GameArea {
   //   }
   // };
 
-  int[] aSRSList = {
-
-0,0,-1,0,-1,1,0,-2,-1,-2,//1,2:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,1,0,1,1,0,-2,1,-2,//1,4:
-
-
-0,0,1,0,1,-1,0,2,1,2,//2,3:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,1,0,1,-1,0,2,1,2,//2,1:
-
-
-0,0,1,0,1,1,0,-2,1,-2,//3,4:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-1,0,-1,1,0,-2,-1,-2,//3,2:
-
-
-0,0,-1,0,-1,-1,0,2,-1,2,//4,3:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-1,0,-1,-1,0,2,-1,2//4,1:
-
-  };
+ 
   // int[][][][] iSRS = {
   //   new int[][][]{
   //     new int[][]{new int[]{0, 0},new int[]{-2, 0},new int[]{1, 0},new int[]{-2, -1},new int[]{1, 2}  }, //new int[]{1, 2}:
@@ -422,32 +415,32 @@ unsafe struct GameArea {
   //     new int[][]{new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0},new int[]{0, 0}     }, //180
   //     new int[][]{new int[]{0, 0},new int[]{-2, 0},new int[]{1, 0},new int[]{-2, -1},new int[]{1, 2}  }, //new int[]{4, 3}:
   //   }
-  // };
-int[] iSRSList = {
+//   // };
+// readonly int[] iSRSList = {
 
-0,0,-2,0,1,0,-2,-1,1,2,//1,2:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-1,0,2,0,-1,2,2,-1,//1,4:
-
-
-0,0,-1,0,2,0,-1,2,2,-1,//2,3:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,2,0,-1,0,2,1,-1,-2,//2,1:
+// 0,0,-2,0,1,0,-2,-1,1,2,//1,2:
+// 0,0,0,0,0,0,0,0,0,0,//180
+// 0,0,-1,0,2,0,-1,2,2,-1,//1,4:
 
 
-0,0,2,0,-1,0,2,1,-1,-2,//3,4:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,1,0,-2,0,1,-2,-2,1,//3,2:
+// 0,0,-1,0,2,0,-1,2,2,-1,//2,3:
+// 0,0,0,0,0,0,0,0,0,0,//180
+// 0,0,2,0,-1,0,2,1,-1,-2,//2,1:
 
 
-0,0,1,0,-2,0,1,-2,-2,1,//4,1:
-0,0,0,0,0,0,0,0,0,0,//180
-0,0,-2,0,1,0,-2,-1,1,2//4,3:
+// 0,0,2,0,-1,0,2,1,-1,-2,//3,4:
+// 0,0,0,0,0,0,0,0,0,0,//180
+// 0,0,1,0,-2,0,1,-2,-2,1,//3,2:
 
-  };
+
+// 0,0,1,0,-2,0,1,-2,-2,1,//4,1:
+// 0,0,0,0,0,0,0,0,0,0,//180
+// 0,0,-2,0,1,0,-2,-1,1,2//4,3:
+
+//   };
 
          
-  int aisrslen = 5;
+  int aisrslen = 1;
   int osrslen = 1;
 
   //  int[][][][] oSRS = {
@@ -497,13 +490,15 @@ int[] iSRSList = {
   }
 
   int getsrsindex(Tetromino piece, int prevRot, int change, int s, int i){
+      Console.SetCursorPosition(30, 4);
+              writeHex((uint)(prevRot*30+change*10+s*2+i));
     if(piece == Tetromino.O || piece == Tetromino.I){
       return 0;
     }
-    if(piece == Tetromino.I){
-      return iSRSList[prevRot*30+change*10+s*2+i];
-    }
-    return aSRSList[prevRot*30+change*10+s*2+i];
+    // if(piece == Tetromino.I){
+    //   return iSRSList[prevRot*30+change*10+s*2+i];
+    // }
+    return aS[prevRot*30+change*10+s*2+i];
   }
 
   public void DrawRotate(int x, int y, Tetromino piece, int prevRot, int rotation) { //ret
@@ -514,11 +509,11 @@ int[] iSRSList = {
     var k = GetBase(piece);
     var change = (rotation - prevRot + 11) % 4;
     var srslen = GetSRSLen(piece);
-    var kickX = 0;
-    var kickY = 0;
+    int kickX = 0;
+    int kickY = 0;
     var kickValid = 1;
-    var s = 0;
-    for(s = 0; s < srslen; ++s){
+    var debugged = 0;
+    for(int s = 0; s < srslen; ++s){
       // int kickX = srs[s][0];
       // int kickY = -srs[s][1];
       kickX = getsrsindex(piece, prevRot, change, s, 0);
@@ -528,16 +523,26 @@ int[] iSRSList = {
       for (int i = 0; i < k; ++i) {
         for (int j = 0; j < k; ++j) {
           if (pix[rotation * GetRotMulti(piece) + j + i * k] == 1) {
-            var xj = x + j;
-            var yj = y + i;
-            var xpj = xj + kickX;
-            var ypi = yj + kickY;
+            int xj = x + j;
+            int yj = y + i;
+            int xpj = xj + kickX;
+            int ypi = yj + kickY;
             if (xpj < 0 || xpj >= Width) { // oob, return!
+              if(debugged == 0){
+                debugged = 1;
+                printDebug("oob x ");
+                Console.SetCursorPosition(30, 3);
+                writeHex((uint)kickX);
+              }
               kickValid = 0;
               rc = 0;
               break;
             }
             if (ypi >= Height) { // in ground, return!
+              if(debugged == 0){
+                debugged = 1;
+                printDebug("oob y");
+              }
               kickValid = 0;
               rc = 0;
               break;
@@ -547,6 +552,11 @@ int[] iSRSList = {
             //   rc = 3;
             // }
             if (areaIndex >= Area || (areaIndex >= 0 && _area[areaIndex] != ' ')) { // collision, return!
+              if(debugged == 0){
+                debugged = 1;
+                printDebug("oob area");
+              }
+
               kickValid = 0;
               rc = 0;
               break;  
@@ -579,7 +589,7 @@ int[] iSRSList = {
           rc = 0;
           continue;
         }
-        printDebug("kick worked");
+        // printDebug("kick worked");
         newPos[0] = x+kickX;
         newPos[1] = y+kickY;
         newPos[2] = rotation;
@@ -594,7 +604,25 @@ int[] iSRSList = {
     newPos[3] = rc;
     // return new int[]{x, y, prevRot, rc};
   }
-
+  void writeHexDigit(uint x) {
+    if (x >= 0 && x < 10) {
+      Console.Write((char)(((uint)'0') + x));
+    } else if (x >= 10 && x < 16) {
+      
+      Console.Write((char)(((uint)'A') + x - 10));
+    }
+  }
+  void writeHex(uint x, uint z = 8) {
+    uint y = 0;
+    for (uint i = 0; i < z; ++i) {
+      y = (y << 4) | (x & 0b1111);
+      x >>= 4;
+    }
+    for (uint i = 0; i < z; ++i) {
+      writeHexDigit(y & 0b1111);
+      y >>= 4;
+    }
+  }
   public int Draw(int x, int y, Tetromino piece, int rotation) {
     char d = (char)(int)piece;
     int rc = 1;
@@ -666,12 +694,8 @@ int[] iSRSList = {
           }
         }
       }
-    }  void printDebug(string input){
-      Console.SetCursorPosition(30, 3);
-      Console.WriteLine("                                                            ");
-      Console.SetCursorPosition(30, 3);
-      Console.WriteLine(input);
-  }
+    }  
+  
     int c = 0;
     for (int i = 0; i < k; ++i) {
       for (int j = 0; j < k; ++j) {
@@ -775,9 +799,9 @@ int[] iSRSList = {
   }
 
   void printDebug(string input){
-      Console.SetCursorPosition(30, 3);
+      Console.SetCursorPosition(30, 2);
       Console.WriteLine("                                                            ");
-      Console.SetCursorPosition(30, 3);
+      Console.SetCursorPosition(30, 2);
       Console.WriteLine(input);
   }
 }
