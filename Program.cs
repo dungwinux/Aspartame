@@ -552,7 +552,7 @@ int[] iSRSList = {
             }
             
             var ground = areaIndex + Width;
-            if (ground >= Area || _area[ground] != ' ') { //ground hit, invalid
+            if (ground >= Area || (ground >= 0 && _area[ground] != ' ')) { //ground hit, invalid
               rc = 2;
             }
           }
@@ -618,7 +618,7 @@ int[] iSRSList = {
           }
           
           var ground = areaIndex + Width;
-          if (ground >= Area || _area[ground] != ' ') { //ground hit, "return" 2!
+          if (ground >= Area || (ground >= 0 && _area[ground] != ' ')) { //ground hit, "return" 2!
             rc = 2;
           }
         }
