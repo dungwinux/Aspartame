@@ -31,7 +31,7 @@ $(error Cannot find bflat)
 endif
 LINUX_LINK:=--ldflags "$(dir $(BFLAT))/lib/linux/x64/glibc/libSystem.Native.a"
 BUILD_PATH:=bflat$(SEP)src$(SEP)zerolib$(SEP)
-BUILD_FLAG:=--stdlib:none --no-reflection --no-stacktrace-data --no-globalization --no-exception-messages -Ot
+BUILD_FLAG:=--stdlib:none --no-reflection --no-stacktrace-data --no-globalization --no-exception-messages -Ot --no-debug-info
 
 eq = $(and $(findstring x$(1),x$(2)), $(findstring x$(2),x$(1)))
 
