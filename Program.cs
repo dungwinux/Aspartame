@@ -116,7 +116,7 @@ while (true) {
       g.Render(gx, gy, false);
     }
     
-    if (placed_count > 11 && g.CountNonBlank() == 0) {
+    if (placed_count > 69 && g.CountNonBlank() == 0) {
       inLoop = false;
       continue;
     }
