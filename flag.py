@@ -35,7 +35,7 @@ def i32(x):
     return x if (x < (1 << 31)) else x - (1 << 32)
 
 with open('Flag.cs', 'w') as fd:
-    fd.write("  int[] msg = new int [] {")
+    fd.write("  int[] msg = {")
     [fd.write(f"{i32(get_filler() | (((x ^ z ^ y) << 7) | y))},") for x, y in reversed(a)]
     fd.write("};")
     fd.write(sub)
